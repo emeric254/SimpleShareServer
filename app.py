@@ -4,8 +4,8 @@ import tornado.web
 import tornado.httpserver
 
 FILES = './files'
-
 MAX_FILE_SIZE = 1073741824  # 1 gio
+SERVER_PORT = os.getenv('PORT', default=8888)
 
 
 class FilesHandler(tornado.web.RequestHandler):
@@ -47,6 +47,6 @@ if __name__ == "__main__":
         os.mkdir(FILES)
     app = make_app()
     server = tornado.httpserver.HTTPServer(app, max_buffer_size=MAX_FILE_SIZE)
-    server.bind(8888)
     server.start(0)  # forks one process per cpu
+    server.bind(SERVER_PORT)
     tornado.ioloop.IOLoop.current().start()
