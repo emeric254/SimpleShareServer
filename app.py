@@ -47,6 +47,11 @@ if __name__ == "__main__":
         os.mkdir(FILES)
     app = make_app()
     server = tornado.httpserver.HTTPServer(app, max_buffer_size=MAX_FILE_SIZE)
-    server.start(0)  # forks one process per cpu
     server.bind(SERVER_PORT)
+    try:
+        server.start(0)  # forks one process per cpu
+    except AttributeError:  # OS without fork() support ...
+        logger.warning('Can not fork, continuing with only one process ...')
+        # do nothing and continue without multi-processing
     tornado.ioloop.IOLoop.current().start()
+
